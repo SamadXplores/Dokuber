@@ -23,8 +23,8 @@ jobs:
       # Schritt 3: Baue das Docker-Image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:latest .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:latest
+          docker build -t samadaz/my-flask-app:latest .
+          docker push samadaz/my-flask-app:latest
 
       # Schritt 4: Stelle die App auf Kubernetes bereit
       - name: Deploy to Kubernetes
