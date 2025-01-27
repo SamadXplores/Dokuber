@@ -1,0 +1,35 @@
+name: Deploy Flask App to Kubernetes
+
+on:
+  push:
+    branches: [ "main" ]  # Pipeline wird bei jedem Push auf den main-Branch ausgelöst
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Schritt 1: Checkout Code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Schritt 2: Logge dich bei Docker Hub ein
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      # Schritt 3: Baue das Docker-Image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:latest .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:latest
+
+      # Schritt 4: Stelle die App auf Kubernetes bereit
+      - name: Deploy to Kubernetes
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
