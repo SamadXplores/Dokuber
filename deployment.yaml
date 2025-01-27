@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: my-flask-app:1.0  # Lokales Image
+        image: samadaz/my-flask-app:latest  # Verwende deinen Docker Hub-Benutzernamen
         ports:
         - containerPort: 5000
